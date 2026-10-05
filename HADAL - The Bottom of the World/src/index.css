@@ -1,0 +1,302 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Archivo", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --color-ink: #0b2530;
+  --color-pale: #e9f1ee;
+  --color-abyss: #010409;
+  --color-glow: #8deaff;
+  --color-deep: #04101d;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-inout: cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+/* ---------- base ---------- */
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background: var(--color-abyss);
+  color: var(--color-pale);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(141, 234, 255, 0.85);
+  color: #02141b;
+}
+
+/* slim, quiet scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(141, 234, 255, 0.28);
+}
+
+/* hide native cursor on precision pointers — the custom cursor replaces it */
+html.fine-pointer,
+html.fine-pointer * {
+  cursor: none !important;
+}
+
+:focus-visible {
+  outline: 1px solid var(--color-glow);
+  outline-offset: 4px;
+}
+
+/* ---------- typography helpers ---------- */
+
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.text-outline-pale {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(233, 241, 238, 0.32);
+}
+.text-outline-ink {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(11, 37, 48, 0.35);
+}
+.text-outline-faint {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(233, 241, 238, 0.12);
+}
+
+.display-wide {
+  font-stretch: 112%;
+}
+
+/* ---------- film grain ---------- */
+
+.grain-layer {
+  position: fixed;
+  inset: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 95;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+  animation: grain-shift 0.9s steps(4) infinite;
+}
+@keyframes grain-shift {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-2%, 1%);
+  }
+  50% {
+    transform: translate(1%, -2%);
+  }
+  75% {
+    transform: translate(-1%, 2%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* ---------- light rays ---------- */
+
+.rays-sway {
+  animation: rays-sway 11s ease-in-out infinite alternate;
+  transform-origin: 50% -10%;
+}
+@keyframes rays-sway {
+  from {
+    transform: skewX(-4deg) translateX(-2%) scaleY(1);
+  }
+  to {
+    transform: skewX(3deg) translateX(2%) scaleY(1.06);
+  }
+}
+
+/* ---------- scroll cue ---------- */
+
+.cue-line {
+  transform-origin: top;
+  animation: cue-drop 2.2s var(--ease-inout) infinite;
+}
+@keyframes cue-drop {
+  0% {
+    transform: scaleY(0);
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  46% {
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+/* ---------- sonar ping ---------- */
+
+.ping-ring {
+  animation: ping-expand 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes ping-expand {
+  0% {
+    transform: translate(-50%, -50%) scale(0.04);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+.ping-dot {
+  animation: ping-dot 1.5s ease-out forwards;
+}
+@keyframes ping-dot {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- signal rings (bottom of the world) ---------- */
+
+.signal-ring {
+  animation: signal-pulse 5s cubic-bezier(0.16, 1, 0.3, 1) infinite both;
+}
+@keyframes signal-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.18);
+    opacity: 0.5;
+  }
+  70% {
+    opacity: 0.08;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* ---------- sound equaliser ---------- */
+
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  height: 10px;
+}
+.eq span {
+  display: block;
+  width: 1.5px;
+  background: currentColor;
+  height: 30%;
+  animation: eq-bounce 1s ease-in-out infinite;
+  transform-origin: bottom;
+}
+.eq span:nth-child(2) {
+  animation-delay: 0.18s;
+}
+.eq span:nth-child(3) {
+  animation-delay: 0.36s;
+}
+@keyframes eq-bounce {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* ---------- drifting ghost words ---------- */
+
+.drift-y {
+  animation: drift-y 14s ease-in-out infinite alternate;
+}
+@keyframes drift-y {
+  from {
+    transform: translateY(-1.5%);
+  }
+  to {
+    transform: translateY(1.5%);
+  }
+}
+
+/* ---------- menu roll links ---------- */
+
+.roll {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+.roll > span {
+  display: block;
+  transition: transform 0.55s var(--ease-out-expo);
+}
+.roll > span:nth-child(2) {
+  position: absolute;
+  inset: 0;
+  transform: translateY(105%);
+}
+a:hover .roll > span:first-child,
+button:hover .roll > span:first-child,
+.group:hover .roll > span:first-child {
+  transform: translateY(-105%);
+}
+a:hover .roll > span:nth-child(2),
+button:hover .roll > span:nth-child(2),
+.group:hover .roll > span:nth-child(2) {
+  transform: translateY(0);
+}
+
+/* ---------- misc ---------- */
+
+.mask-fade-b {
+  mask-image: linear-gradient(to bottom, black 52%, transparent 97%);
+  -webkit-mask-image: linear-gradient(to bottom, black 52%, transparent 97%);
+}
+.mask-soft {
+  mask-image: radial-gradient(ellipse 78% 70% at 50% 55%, black 38%, transparent 76%);
+  -webkit-mask-image: radial-gradient(ellipse 78% 70% at 50% 55%, black 38%, transparent 76%);
+}
+.mask-surface {
+  mask-image: linear-gradient(to bottom, black 62%, transparent 99%);
+  -webkit-mask-image: linear-gradient(to bottom, black 62%, transparent 99%);
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .grain-layer,
+  .rays-sway,
+  .cue-line,
+  .signal-ring,
+  .eq span,
+  .drift-y {
+    animation: none !important;
+  }
+  * {
+    scroll-behavior: auto !important;
+  }
+}
